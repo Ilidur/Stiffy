@@ -15,7 +15,7 @@ class ServoData
   
 };
 
-ServoData axServoData[ ] = { 3, {5,100}, {6,0}, {9,110}, 10, 11 };
+ServoData axServoData[ ] = { {3,95}, {5,100}, {6,0}, {9,110}, 10, 11 };
 int iButtonPin = 2;
 
 const int servoCount = 4;
@@ -35,10 +35,12 @@ void setup()
 void loop()
 {
 
+  // Go to stand-by position
    for (int i =0; i <servoCount ; i++)
   {
     axServos[i].write(axServoData[i].m_iStartOffset);
   }  
+
   
   //Wait for button to be pressed
   int iButtonState;
@@ -48,48 +50,54 @@ void loop()
   } 
   while (iButtonState == LOW );
 
+  // Move into max horizontal height position 
   for (pos = 0; pos <= 90; pos += 1) 
   {  
     axServos[1].write(axServoData[1].m_iStartOffset+pos);
     
-    delay(50);
+    delay(10);
   }
 
-  for (pos = 90; pos >= 25; pos -= 1) 
+  // Move to grab position
+  for (pos = 90; pos >= 28; pos -= 1) 
   {
     axServos[0].write(pos);
     axServos[1].write(90+pos);
-    
-    delay(50);
+
+    // Minimum delay to minimize whiplash and stop hitting the table.
+    delay(20);
   }
+
+  // Grab object
+  delay(1000);
 
   for (pos = 0; pos <= 90; pos += 1) 
   {
     axServos[2].write(pos);
     
-    delay(20);
+    delay(10);
   }
-  
-  for (pos = 25; pos <= 90; pos += 1) 
+
+  // Raise to max horizontal height
+  for (pos = 28; pos <= 90; pos += 1) 
   {  
     axServos[0].write(pos);
     axServos[1].write(90+pos);
     
-    delay(50);
+    delay(10);
   }
 
-  for (pos = 90; pos >= 0; pos -= 1) 
-  {
-    axServos[2].write(pos);
-    
-    delay(20);
-  }
+  // Drop the mic
+  delay(500);
+  axServos[2].write(0);
+  delay(500);
 
-    for (pos = 90; pos <= 0; pos -= 1) 
+  // Return to start / low effort position
+  for (pos = 90; pos <= 0; pos -= 1) 
   {  
     axServos[1].write(90+pos);
     
-    delay(50);
+    delay(20);
   }
 }
 
