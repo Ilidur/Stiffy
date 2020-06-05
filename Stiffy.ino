@@ -15,7 +15,10 @@ class ServoData
   
 };
 
-ServoData axServoData[ ] = { {3,95}, {5,100}, {6,0}, {9,110}, 10, 11 };
+//Servo 2 [60-160]
+//Servo 3 [60-150]
+
+ServoData axServoData[ ] = { {3,180}, {5,110}, {6,50}, {9,110}};
 int iButtonPin = 2;
 
 const int servoCount = 4;
@@ -55,41 +58,41 @@ void loop()
   {  
     axServos[1].write(axServoData[1].m_iStartOffset+pos);
     
-    delay(10);
+    delay(100);
   }
 
   // Move to grab position
   for (pos = 90; pos >= 28; pos -= 1) 
   {
-    axServos[0].write(pos);
+    axServos[2].write(pos);
     axServos[1].write(90+pos);
 
     // Minimum delay to minimize whiplash and stop hitting the table.
-    delay(20);
+    delay(200);
   }
 
   // Grab object
   delay(1000);
 
-  for (pos = 0; pos <= 90; pos += 1) 
+  for (pos = 100; pos >= 20; pos -= 1) 
   {
-    axServos[2].write(pos);
+    axServos[0].write(pos);
     
-    delay(10);
+    delay(100);
   }
 
   // Raise to max horizontal height
   for (pos = 28; pos <= 90; pos += 1) 
   {  
-    axServos[0].write(pos);
+    axServos[2].write(pos);
     axServos[1].write(90+pos);
     
-    delay(10);
+    delay(100);
   }
 
   // Drop the mic
   delay(500);
-  axServos[2].write(0);
+  axServos[0].write(0);
   delay(500);
 
   // Return to start / low effort position
@@ -100,4 +103,3 @@ void loop()
     delay(20);
   }
 }
-
